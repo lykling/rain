@@ -13,6 +13,8 @@ EOF
 function fixpermission {
     find /var/www/html -type d -exec chmod 755 {} \;
     find /var/www/html -type f -exec chmod 644 {} \;
+
+    chown -R 82:www-data /var/www/html
 }
 
 function launch {
@@ -22,8 +24,8 @@ function launch {
     if [[ ! -f /var/www/html/data/VERSION ]]; then
         mkdir -pv /var/www/html
         tar -zc -C /rainloop/rainloop . | tar -zx -C /var/www/html
-        fixpermission
     fi
+    fixpermission
     subenv /rainloop/nginx.conf.template /etc/nginx/conf.d/default.conf
     nginx -g "daemon off;"
 }
